@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,10 +10,11 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   TouchableWithoutFeedback,
+  Dimensions,
 } from "react-native";
 
-import * as Font from "expo-font";
-import { AppLoading } from "expo";
+// import { useFonts } from "expo-font";
+// import * as SplashScreen from "expo-splash-screen";
 
 const initialState = {
   name: "",
@@ -21,16 +22,43 @@ const initialState = {
   password: "",
 };
 
-const loadApplication = async () => {
-  await Font.loadAsync({
-    "RobotoSlab-Regular": require("./assets/fonts/RobotoSlab-Regular.ttf"),
-  });
-};
+// const [fontsLoader] = useFonts({
+//   "RobotoSlab-Regular": require("./assets/fonts/RobotoSlab-Regular.ttf"),
+//   "RobotoSlab-Medium": require("./assets/fonts/RobotoSlab-Medium.ttf"),
+// });
+
+// useEffect(() => {
+//   async function prepare() {
+//     await SplashScreen.preventAutoHideAsync();
+//   }
+//   prepare();
+// }, []);
 
 export default function App() {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setstate] = useState(initialState);
-  const [iasReady, setIasReady] = useState(false);
+
+  // if (!fontsLoader) {
+  //   return null;
+  // } else {
+  //   SplashScreen.hideAsync();
+  // }
+
+  const [dimensions, setdimensions] = useState(
+    Dimensions.get("window").width - 16 * 2
+  );
+
+  useEffect(() => {
+    const onChange = () => {
+      const width = Dimensions.get("window").width - 16 * 2;
+
+      setdimensions(width);
+    };
+    Dimensions.addEventListener("change", onChange);
+    return () => {
+      Dimensions.removeEventListener("change", onChange);
+    };
+  }, []);
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
@@ -43,16 +71,6 @@ export default function App() {
     console.log(state);
     setstate(initialState);
   };
-
-  if (!iasReady) {
-    return (
-      <AppLoading
-        startAsync={loadApplication}
-        onFinish={() => setIasReady(true)}
-        onError={console.warn}
-      />
-    );
-  }
 
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
@@ -69,6 +87,7 @@ export default function App() {
                 style={{
                   ...styles.form,
                   paddingBottom: isShowKeyboard ? 10 : 78,
+                  width: dimensions,
                 }}
               >
                 <Text style={styles.title}>Реєстрація</Text>
@@ -141,6 +160,7 @@ const styles = StyleSheet.create({
     flex: 1,
     resizeMode: "cover",
     justifyContent: "flex-end",
+    alignItems: "center",
   },
   box: {
     paddingTop: 92,
@@ -198,7 +218,6 @@ const styles = StyleSheet.create({
     fontSize: 30,
     textAlign: "center",
     marginBottom: 33,
-    fontFamily: "RobotoSlab-Regular",
   },
   text: {
     color: "#212121",
