@@ -35,7 +35,7 @@ const initialState = {
 //   prepare();
 // }, []);
 
-export default function RegistrationScreen() {
+export default function RegistrationScreen({ navigation }) {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setstate] = useState(initialState);
 
@@ -80,16 +80,16 @@ export default function RegistrationScreen() {
           style={styles.image}
           source={require("../../assets/images/painting-mountains.jpg")}
         >
-          <View>
-            <Image
-              style={styles.photo}
-              source={require("../../assets/add-photo.png")}
-            />
-          </View>
           <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : ""}
           >
             <View style={styles.box}>
+              <View>
+                <Image
+                  style={styles.photo}
+                  source={require("../../assets/add-photo.png")}
+                />
+              </View>
               <View
                 style={{
                   ...styles.form,
@@ -148,7 +148,20 @@ export default function RegistrationScreen() {
                 >
                   <Text style={styles.btnTitle}>Зареєструватися</Text>
                 </TouchableOpacity>
-                <Text style={styles.text}>Вже є акаунт? Увійти</Text>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("Login")}
+                  style={{
+                    marginTop: 16,
+                    alignSelf: "center",
+                  }}
+                >
+                  <Text style={styles.text}>
+                    Вже є аккаунт?{" "}
+                    <Text style={{ fontSize: 18, color: "#ff6347" }}>
+                      Увійти
+                    </Text>
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
           </KeyboardAvoidingView>
@@ -173,6 +186,7 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
     paddingRight: 16,
     paddingTop: 32,
+    paddingTop: 92,
     backgroundColor: "#FFFFFF",
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
@@ -225,13 +239,16 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 33,
   },
+
   text: {
-    color: "#212121",
-    textAlign: "center",
-    marginTop: 16,
+    color: "#1B4371",
+    fontSize: 16,
   },
   photo: {
-    marginLeft: 128,
-    marginRight: 128,
+    position: "absolute",
+    top: -150,
+    left: 128,
+    // marginLeft: 128,
+    // marginRight: 128,
   },
 });

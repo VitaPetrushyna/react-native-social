@@ -18,7 +18,7 @@ const initialState = {
   password: "",
 };
 
-export default function LoginScreen() {
+export default function LoginScreen({ navigation }) {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setstate] = useState(initialState);
 
@@ -62,12 +62,12 @@ export default function LoginScreen() {
               <View
                 style={{
                   ...styles.form,
-                  paddingBottom: isShowKeyboard ? 10 : 78,
+                  paddingBottom: isShowKeyboard ? 10 : 144,
                   width: dimensions,
                 }}
               >
                 <Text style={styles.title}>Увійти</Text>
-                <View style={{ marginTop: 20 }}>
+                <View>
                   <TextInput
                     style={styles.input}
                     textAlign={"left"}
@@ -104,7 +104,20 @@ export default function LoginScreen() {
                 >
                   <Text style={styles.btnTitle}>Увійти</Text>
                 </TouchableOpacity>
-                <Text style={styles.text}>Немає акаунту? Зареєструватися</Text>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("Registration")}
+                  style={{
+                    marginTop: 16,
+                    alignSelf: "center",
+                  }}
+                >
+                  <Text style={styles.text}>
+                    Не маєш аккаунту?{" "}
+                    <Text style={{ fontSize: 18, color: "#ff6347" }}>
+                      Зареєструватися
+                    </Text>
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
           </KeyboardAvoidingView>
@@ -183,8 +196,7 @@ const styles = StyleSheet.create({
     marginBottom: 33,
   },
   text: {
-    color: "#212121",
-    textAlign: "center",
-    marginTop: 16,
+    color: "#1B4371",
+    fontSize: 16,
   },
 });
