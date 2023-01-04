@@ -14,11 +14,15 @@ import {
   Image,
 } from "react-native";
 
+import { useDispatch } from "react-redux";
+
+import { authSignUpUser } from "../../redux/auth/authOperations";
+
 // import { useFonts } from "expo-font";
 // import * as SplashScreen from "expo-splash-screen";
 
 const initialState = {
-  name: "",
+  nickname: "",
   email: "",
   password: "",
 };
@@ -45,6 +49,8 @@ export default function RegistrationScreen({ navigation }) {
   //   SplashScreen.hideAsync();
   // }
 
+  const dispatch = useDispatch();
+
   const [dimensions, setdimensions] = useState(
     Dimensions.get("window").width - 16 * 2
   );
@@ -66,10 +72,10 @@ export default function RegistrationScreen({ navigation }) {
     Keyboard.dismiss();
   };
 
-  const keyboarInitialdHide = () => {
+  const handleSubmit = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
-    console.log(state);
+    dispatch(authSignUpUser(state));
     setstate(initialState);
   };
 
@@ -105,9 +111,12 @@ export default function RegistrationScreen({ navigation }) {
                     placeholder="Логін"
                     placeholderTextColor="#BDBDBD"
                     onFocus={() => setIsShowKeyboard(true)}
-                    value={state.name}
+                    value={state.nickname}
                     onChangeText={(value) =>
-                      setstate((prevState) => ({ ...prevState, name: value }))
+                      setstate((prevState) => ({
+                        ...prevState,
+                        nickname: value,
+                      }))
                     }
                   />
                 </View>
@@ -144,7 +153,7 @@ export default function RegistrationScreen({ navigation }) {
                 <TouchableOpacity
                   activeOpacity={0.8}
                   style={styles.btn}
-                  onPress={keyboarInitialdHide}
+                  onPress={handleSubmit}
                 >
                   <Text style={styles.btnTitle}>Зареєструватися</Text>
                 </TouchableOpacity>
