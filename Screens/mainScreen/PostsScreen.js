@@ -1,45 +1,26 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
+import { moduleName } from "react-native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import DefaultScreenPosts from "../nestedScreens/DefaultScreenPosts";
+import CommentsScreen from "../nestedScreens/CommentsScreen";
+import MapScreen from "../nestedScreens/MapScreen";
+
+const NestedScreen = createNativeStackNavigator();
 
 const PostsScreen = () => {
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Публікації </Text>
-        <TouchableOpacity activeOpacity={0.8}>
-          <MaterialIcons
-            style={styles.icon}
-            name="logout"
-            size={24}
-            color="#BDBDBD"
-          />
-        </TouchableOpacity>
-      </View>
-    </View>
+    <NestedScreen.Navigator>
+      <NestedScreen.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="DefaultScreen"
+        component={DefaultScreenPosts}
+      />
+      <NestedScreen.Screen name="Comments" component={CommentsScreen} />
+      <NestedScreen.Screen name="Map" component={MapScreen} />
+    </NestedScreen.Navigator>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#FFFFFF",
-    // alignItems: "center",
-  },
-  header: {
-    borderBottomWidth: 1,
-    borderBottomColor: "#BDBDBD",
-    paddingTop: 55,
-    paddingBottom: 11,
-    width: 400,
-  },
-  title: {
-    fontSize: 20,
-    textAlign: "center",
-  },
-  icon: {
-    textAlign: "right",
-  },
-});
 
 export default PostsScreen;
