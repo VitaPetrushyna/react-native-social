@@ -13,8 +13,18 @@ import {
   Dimensions,
   Image,
 } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
+
+import { useDispatch } from "react-redux";
+import { authSignOutUser } from "../../redux/auth/authOperations";
 
 const ProfileScreen = () => {
+  const dispatch = useDispatch();
+
+  const signOut = () => {
+    dispatch(authSignOutUser());
+  };
+
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -49,6 +59,14 @@ const ProfileScreen = () => {
                 style={styles.icon}
                 source={require("../../assets/map-pin.png")}
               />
+              <TouchableOpacity activeOpacity={0.8} onPress={signOut}>
+                <MaterialIcons
+                  style={styles.icon}
+                  name="logout"
+                  size={24}
+                  color="#BDBDBD"
+                />
+              </TouchableOpacity>
             </View>
           </View>
         </View>
