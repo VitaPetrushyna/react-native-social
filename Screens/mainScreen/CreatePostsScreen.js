@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Camera } from "expo-camera";
 import * as Location from "expo-location";
 import db from "../../firebase/config";
+// import { fireStorage } from "../../firebase/config";
 
 const CreatePostsScreen = ({ navigation }) => {
   const [camera, setCamera] = useState(null);
@@ -30,8 +31,8 @@ const CreatePostsScreen = ({ navigation }) => {
   const takePhoto = async () => {
     const { uri } = await camera.takePictureAsync();
     const location = await Location.getCurrentPositionAsync();
-    // console.log("latitude", location.coords.latitude);
-    // console.log("longitude", location.coords.longitude);
+    console.log("latitude", location.coords.latitude);
+    console.log("longitude", location.coords.longitude);
     setPhoto(uri);
     console.log("photo uri ", uri);
   };
@@ -41,13 +42,12 @@ const CreatePostsScreen = ({ navigation }) => {
     navigation.navigate("DefaultScreen", { photo });
   };
 
-  const uploadPhotoToServer = async () => {
+  const uploadPhotoToServer = async (uri) => {
     const response = await fetch(photo);
     const file = await response.blob();
-
     const uniquePostId = Date.now().toString();
 
-    const data = await db.storage().ref(`postImage/${uniquePostId}`).put(file);
+    await db.storage().ref(`postImage/${uniquePostId}`).put(file);
     console.log("data", data);
   };
 

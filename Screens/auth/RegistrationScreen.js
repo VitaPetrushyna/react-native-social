@@ -22,9 +22,9 @@ import { authSignUpUser } from "../../redux/auth/authOperations";
 // import * as SplashScreen from "expo-splash-screen";
 
 const initialState = {
-  nickname: "",
   email: "",
   password: "",
+  nickname: "",
 };
 
 // const [fontsLoader] = useFonts({

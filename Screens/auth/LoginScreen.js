@@ -37,19 +37,22 @@ export default function LoginScreen({ navigation }) {
       setdimensions(width);
     };
     Dimensions.addEventListener("change", onChange);
-    return () => {};
+    return () => {
+      // Dimensions.removeEventListener("change", onChange);
+    };
   }, []);
 
-  const keyboardHide = () => {
-    setIsShowKeyboard(false);
-    Keyboard.dismiss();
-  };
-
   const handleSubmit = () => {
+    console.log("click");
     setIsShowKeyboard(false);
     Keyboard.dismiss();
     dispatch(authSignInUser(state));
     setstate(initialState);
+  };
+
+  const keyboardHide = () => {
+    setIsShowKeyboard(false);
+    Keyboard.dismiss();
   };
 
   return (
