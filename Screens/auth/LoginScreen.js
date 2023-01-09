@@ -24,6 +24,7 @@ const initialState = {
 export default function LoginScreen({ navigation }) {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setstate] = useState(initialState);
+
   const dispatch = useDispatch();
 
   const [dimensions, setdimensions] = useState(

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {} from "react-native";
 
 import { Provider } from "react-redux";

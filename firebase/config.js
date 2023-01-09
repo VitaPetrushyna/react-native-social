@@ -1,20 +1,21 @@
 import * as firebase from "firebase";
+
 import "firebase/auth";
-import "firebase/firebase-firestore";
 import "firebase/storage";
+import "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDoa_8s3qC8mL9frc9zSqOYgNbv9GWE6cI",
-  authDomain: "rn-project-3a002.firebaseapp.com",
-  databaseURL: "https://rn-project-3a002-default-rtdb.firebaseio.com",
-  projectId: "rn-project-3a002",
-  storageBucket: "rn-project-3a002.appspot.com",
-  messagingSenderId: "514774283087",
-  appId: "1:514774283087:web:b1a1e78b9828eaa6554b3a",
-  measurementId: "G-72J7QS0QNE",
+  apiKey: "AIzaSyA5yOwCGq1unfidUzpm9JZIgzHopSp_-kk",
+  authDomain: "rn-project-52f79.firebaseapp.com",
+  projectId: "rn-project-52f79",
+  storageBucket: "rn-project-52f79.appspot.com",
+  messagingSenderId: "116120277197",
+  appId: "1:116120277197:web:d5513d8156ecdf8fd51984",
+  measurementId: "G-ZEQJ6CCSVG",
 };
 
 // export default app;
+firebase.initializeApp(firebaseConfig);
 
-export default firebase.initializeApp(firebaseConfig);
+export default firebase;

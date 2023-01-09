@@ -1,14 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { useSelector } from "react-redux";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Camera } from "expo-camera";
 import * as Location from "expo-location";
 import db from "../../firebase/config";
-// import { fireStorage } from "../../firebase/config";
 
 const CreatePostsScreen = ({ navigation }) => {
   const [camera, setCamera] = useState(null);
   const [photo, setPhoto] = useState(null);
+  const [comment, setComment] = useState("");
+  const [location, setLocation] = useState(null);
+
+  const { userId, nickName } = useSelector((state) => state.auth);
 
   useEffect(() => {
     (async () => {
@@ -19,36 +30,65 @@ const CreatePostsScreen = ({ navigation }) => {
     })();
   });
 
+  // useEffect(() => {
+  //   (async () => {
+  //     let { status } = await Location.requestForegroundPermissionsAsync();
+  //     if (status !== "granted") {
+  //       setErrorMsg("Permission to access location was denied");
+  //     }
+  //   })();
+  // });
+
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
     })();
-  });
+  }, []);
 
   const takePhoto = async () => {
+    console.log("location", location);
+    console.log("comment", comment);
+
     const { uri } = await camera.takePictureAsync();
-    const location = await Location.getCurrentPositionAsync();
-    console.log("latitude", location.coords.latitude);
-    console.log("longitude", location.coords.longitude);
+    // const location = await Location.getCurrentPositionAsync();
+    // console.log("latitude", location.coords.latitude);
+    // console.log("longitude", location.coords.longitude);
+
     setPhoto(uri);
     console.log("photo uri ", uri);
   };
 
   const sendPhoto = () => {
-    uploadPhotoToServer();
+    uploadPostToServer();
     navigation.navigate("DefaultScreen", { photo });
   };
 
-  const uploadPhotoToServer = async (uri) => {
+  const uploadPostToServer = async () => {
+    const photo = await uploadPhotoToServer();
+    const createPost = await db
+      .firestore()
+      .collection("posts")
+      .add({ photo, comment, location: location.coords, userId, nickName });
+  };
+
+  const uploadPhotoToServer = async () => {
     const response = await fetch(photo);
     const file = await response.blob();
+
     const uniquePostId = Date.now().toString();
 
     await db.storage().ref(`postImage/${uniquePostId}`).put(file);
-    console.log("data", data);
+
+    const processedPhoto = await db
+      .storage()
+      .ref("postImage")
+      .child(uniquePostId)
+      .getDownloadURL();
+
+    return processedPhoto;
   };
 
   return (
@@ -85,9 +125,13 @@ const CreatePostsScreen = ({ navigation }) => {
             Завантажте фото
           </Text>
           <Text style={styles.text}>Назва</Text>
-          <View style={styles.line}></View>
+          <View style={styles.inputContainer}>
+            <TextInput style={styles.input} onChangeText={setComment} />
+          </View>
           <Text style={styles.text}>Місцевість</Text>
-          <View style={styles.line}></View>
+          <View style={styles.inputContainer}>
+            <TextInput style={styles.input} onChangeText={setComment} />
+          </View>
         </View>
         <View>
           <TouchableOpacity onPress={sendPhoto} style={styles.sendBtn}>
@@ -158,15 +202,10 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     marginLeft: 16,
   },
-  line: {
-    borderBottomWidth: 1,
-    borderColor: "#BDBDBD",
-    marginBottom: 32,
-    marginLeft: 16,
-    marginRight: 16,
-  },
+
   sendBtn: {
     marginHorizontal: 70,
+    marginTop: 50,
     height: 51,
     backgroundColor: "#FF6C00",
     borderRadius: 100,
@@ -186,6 +225,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 30,
+  },
+  inputContainer: {
+    marginHorizontal: 10,
+    marginBottom: 10,
+  },
+  input: {
+    height: 20,
+    borderWidth: 1,
+    borderColor: "#fff",
+    borderBottomColor: "#20b2aa",
   },
 });
 

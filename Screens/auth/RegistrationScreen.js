@@ -15,7 +15,6 @@ import {
 } from "react-native";
 
 import { useDispatch } from "react-redux";
-
 import { authSignUpUser } from "../../redux/auth/authOperations";
 
 // import { useFonts } from "expo-font";
@@ -40,16 +39,17 @@ const initialState = {
 // }, []);
 
 export default function RegistrationScreen({ navigation }) {
+  console.log(Platform.OS);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setstate] = useState(initialState);
+
+  const dispatch = useDispatch();
 
   // if (!fontsLoader) {
   //   return null;
   // } else {
   //   SplashScreen.hideAsync();
   // }
-
-  const dispatch = useDispatch();
 
   const [dimensions, setdimensions] = useState(
     Dimensions.get("window").width - 16 * 2
@@ -75,6 +75,8 @@ export default function RegistrationScreen({ navigation }) {
   const handleSubmit = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
+    console.log(state);
+
     dispatch(authSignUpUser(state));
     setstate(initialState);
   };

@@ -25,7 +25,6 @@ export const authSignUpUser =
       dispatch(updateUserProfile(userUpdateProfile));
     } catch (error) {
       console.log("error", error);
-
       console.log("error.message", error.message);
     }
   };
