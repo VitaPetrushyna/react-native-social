@@ -10,16 +10,23 @@ import {
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 
+import db from "../../firebase/config";
+
 const DefaultScreenPosts = ({ route, navigation }) => {
   const [posts, setPosts] = useState([]);
-  console.log("route.params", route.params);
+
+  const getAllPost = async () => {
+    await db
+      .firestore()
+      .collection("posts")
+      .onSnapshot((data) =>
+        setPosts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+      );
+  };
 
   useEffect(() => {
-    if (route.params) {
-      setPosts((prevState) => [...prevState, route.params]);
-    }
-  }, [route.params]);
-  console.log("posts", posts);
+    getAllPost();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -46,9 +53,12 @@ const DefaultScreenPosts = ({ route, navigation }) => {
           </View>
         )}
       />
-      <Button title="go to map" onPress={() => navigation.navigate("Map")} />
       <Button
-        title="go to Comments"
+        title="Перейти до карти"
+        onPress={() => navigation.navigate("Map")}
+      />
+      <Button
+        title="Додати коментарій"
         onPress={() => navigation.navigate("Comments")}
       />
     </View>

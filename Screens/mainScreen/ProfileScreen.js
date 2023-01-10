@@ -15,12 +15,28 @@ import {
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { authSignOutUser } from "../../redux/auth/authOperations";
+import db from "../../firebase/config";
 
 const ProfileScreen = () => {
   const dispatch = useDispatch();
+  const [userPosts, setUserPosts] = useState([]);
+  const { userId } = useSelector((state) => state.auth);
 
+  useEffect(() => {
+    getUserPosts();
+  }, []);
+
+  const getUserPosts = async () => {
+    await db
+      .firestore()
+      .collection("posts")
+      .where("userId", "==", userId)
+      .onSnapshot((data) =>
+        setUserPosts(data.docs.map((doc) => ({ ...doc.data() })))
+      );
+  };
   const signOut = () => {
     dispatch(authSignOutUser());
   };
@@ -40,8 +56,25 @@ const ProfileScreen = () => {
           </View>
           <View>
             <Text style={styles.title}>Прізвище Ім`я</Text>
-            <View style={styles.takePhotoContainer}>
-              <Text style={{ color: "#BDBDBD", fontSize: 20 }}>Фото</Text>
+            <View>
+              <FlatList
+                data={userPosts}
+                keyExtractor={(item, indx) => indx.toString()}
+                renderItem={({ item }) => (
+                  <View
+                    style={{
+                      marginBottom: 10,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Image
+                      source={{ uri: item.photo }}
+                      style={{ width: 350, height: 200 }}
+                    />
+                  </View>
+                )}
+              />
             </View>
             <Text style={styles.text}>Назва</Text>
             <View style={styles.icons}>
@@ -115,17 +148,17 @@ const styles = StyleSheet.create({
     top: -150,
     right: -70,
   },
-  takePhotoContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 32,
-    width: 343,
-    height: 240,
-    backgroundColor: "#E8E8E8",
-    borderColor: "#E8E8E8",
-    borderWidth: 1,
-    borderRadius: 8,
-  },
+  // takePhotoContainer: {
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  //   marginTop: 32,
+  //   width: 343,
+  //   height: 240,
+  //   backgroundColor: "#E8E8E8",
+  //   borderColor: "#E8E8E8",
+  //   borderWidth: 1,
+  //   borderRadius: 8,
+  // },
   icon: {
     width: 20,
     height: 20,
